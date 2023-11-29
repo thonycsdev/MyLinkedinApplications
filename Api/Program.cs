@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Repository;
+using Repository.Ioc;
+using Service.Ioc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlite("Data Source=linkedinJobs.db"));
+builder.Services.AddRepositoryIoc();
+builder.Services.AddServiceIoc();
 
 var app = builder.Build();
 
