@@ -34,15 +34,15 @@ namespace Repository
             return entity;
         }
 
-        private async Task<T> FindEntityOrThrow(int id)
-        {
-            return await _entity.Where(x => x.Id == id).FirstOrDefaultAsync() ?? throw new IndexOutOfRangeException();
-        }
 
         public async Task Update(T entity)
         {
             _dbContext.Update(entity);
             await _dbContext.SaveChangesAsync();
+        }
+        private async Task<T> FindEntityOrThrow(int id)
+        {
+            return await _entity.Where(x => x.Id == id).FirstOrDefaultAsync() ?? throw new IndexOutOfRangeException();
         }
     }
 }
