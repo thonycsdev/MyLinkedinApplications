@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using Repository.Ioc;
+using Service.AutoMapper;
 using Service.Ioc;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,7 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlite("Data Source=linkedinJobs.db"));
 builder.Services.AddRepositoryIoc();
 builder.Services.AddServiceIoc();
-
+builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
