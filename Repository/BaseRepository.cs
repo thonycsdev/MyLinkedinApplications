@@ -37,5 +37,10 @@ namespace Repository
             var entity = await _entity.Where(x => x.Id == id).FirstOrDefaultAsync() ?? throw new IndexOutOfRangeException();
             return entity;
         }
+
+        public async Task Update(T entity)
+        {
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

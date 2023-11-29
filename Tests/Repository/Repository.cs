@@ -78,5 +78,32 @@ namespace Tests.Repository
             var users = _context.Users.ToList();
             Assert.Empty(users);
         }
+
+        [Fact]
+        public async Task GivenAUserIdAndNewUserInformation_WhenAUserAlreadyExistsInTheDatabase_UpdateTheUserInformation()
+        {
+            var repository = new BaseRepository<User>(_context);
+            var user = _fixture.Create<User>();
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            var userSaved = await repository.GetById(user.Id);
+
+            var infoToUpdate = _fixture.Create<User>();
+
+            infoToUpdate.Id = userSaved.Id;
+            userSaved.Name = infoToUpdate.Name;
+            userSaved.Email = infoToUpdate.Email;
+            userSaved.UpdatedAt = infoToUpdate.UpdatedAt;
+
+            await repository.Update(infoToUpdate);
+
+            var userUpdated = await repository.GetById(user.Id);
+
+            Assert.Equal(userUpdated.Id, infoToUpdate.Id);
+            Assert.Equal(userUpdated.Name, infoToUpdate.Name);
+            Assert.Equal(userUpdated.Email, infoToUpdate.Email);
+            Assert.Equal(userUpdated.UpdatedAt, infoToUpdate.UpdatedAt);
+        }
     }
 }
