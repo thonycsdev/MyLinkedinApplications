@@ -25,9 +25,16 @@ namespace Repository
             await _dbContext.SaveChangesAsync();
         }
 
+        public Task Delete(int id)
+        {
+            var entity = _entity.Where(x => x.Id == id).FirstOrDefault() ?? throw new IndexOutOfRangeException();
+            _entity.Remove(entity);
+            return _dbContext.SaveChangesAsync();
+        }
+
         public async Task<T?> GetById(int id)
         {
-            var entity = await _entity.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var entity = await _entity.Where(x => x.Id == id).FirstOrDefaultAsync() ?? throw new IndexOutOfRangeException();
             return entity;
         }
     }
