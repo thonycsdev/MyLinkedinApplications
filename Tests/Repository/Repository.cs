@@ -91,16 +91,14 @@ namespace Tests.Repository
 
             var infoToUpdate = _fixture.Create<User>();
 
-            infoToUpdate.Id = userSaved.Id;
             userSaved.Name = infoToUpdate.Name;
             userSaved.Email = infoToUpdate.Email;
             userSaved.UpdatedAt = infoToUpdate.UpdatedAt;
 
-            await repository.Update(infoToUpdate);
+            await repository.Update(userSaved);
 
             var userUpdated = await repository.GetById(user.Id);
 
-            Assert.Equal(userUpdated.Id, infoToUpdate.Id);
             Assert.Equal(userUpdated.Name, infoToUpdate.Name);
             Assert.Equal(userUpdated.Email, infoToUpdate.Email);
             Assert.Equal(userUpdated.UpdatedAt, infoToUpdate.UpdatedAt);
