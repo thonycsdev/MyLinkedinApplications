@@ -34,6 +34,11 @@ namespace Repository
             return entity;
         }
 
+        public async Task<IEnumerable<T>> GetValues()
+        {
+            return await _entity.ToListAsync();
+        }
+
 
         public async Task Update(T entity)
         {

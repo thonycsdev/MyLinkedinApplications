@@ -7,6 +7,7 @@ namespace Service.DTOs
 {
     public class UserRequest
     {
-        
+        public string Email { get; internal set; }
+        public string Name { get; internal set; }
     }
 }

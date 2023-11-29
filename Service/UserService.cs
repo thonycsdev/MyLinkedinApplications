@@ -1,3 +1,5 @@
+using AutoMapper;
+using Domain.Entities;
 using Repository.Interfaces;
 using Service.DTOs;
 using Service.DTOs.Responses;
@@ -8,33 +10,84 @@ namespace Service
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        public UserService(IUserRepository userRepository)
+        private readonly IMapper _mapper;
+        public UserService(IUserRepository userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
         }
-        public Task<UserResponse> CreateAsync(UserRequest entity)
+        public async Task<UserResponse> CreateAsync(UserRequest entity)
         {
-            throw new NotImplementedException();
+            var user = _mapper.Map<User>(entity);
+            try
+            {
+                await _userRepository.Create(user);
+                return _mapper.Map<UserResponse>(user);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _userRepository.Delete(id);
+                return;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Task<IEnumerable<UserResponse>> GetAllAsync()
+        public async Task<IEnumerable<UserResponse>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var users = await _userRepository.GetValues();
+                return _mapper.Map<IEnumerable<UserResponse>>(users);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Task<UserResponse> GetByIdAsync(int id)
+        public async Task<UserResponse> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = await _userRepository.GetById(id);
+                return _mapper.Map<UserResponse>(user);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Task<UserResponse> UpdateAsync(UserRequest entity)
+        public async Task<UserResponse> UpdateAsync(UserRequest entity, int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var userToUpdate = await _userRepository.GetById(id);
+                userToUpdate!.Email = entity.Email;
+                userToUpdate!.Name = entity.Name;
+                await _userRepository.Update(userToUpdate);
+                return _mapper.Map<UserResponse>(userToUpdate);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Service.Interfaces
         Task<TEntityResponse> GetByIdAsync(int id);
         Task<IEnumerable<TEntityResponse>> GetAllAsync();
         Task<TEntityResponse> CreateAsync(TEntityRequest entity);
-        Task<TEntityResponse> UpdateAsync(TEntityRequest entity);
+        Task<TEntityResponse> UpdateAsync(TEntityRequest entity, int id);
         Task DeleteAsync(int id);
     }
 }
