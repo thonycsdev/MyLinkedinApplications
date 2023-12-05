@@ -62,7 +62,9 @@ namespace Tests.Repository
         {
             var repository = new BaseRepository<User>(_context);
 
-            await Assert.ThrowsAsync<IndexOutOfRangeException>(() => repository.GetById(_faker.Random.Int(1, 100)));
+            var ex = await Assert.ThrowsAsync<IndexOutOfRangeException>(() => repository.GetById(_faker.Random.Int(1, 100)));
+        
+            Assert.Equal("User not found", ex.Message);
         }
 
         [Fact]

@@ -47,7 +47,7 @@ namespace Repository
         }
         private async Task<T> FindEntityOrThrow(int id)
         {
-            return await _entity.Where(x => x.Id == id).FirstOrDefaultAsync() ?? throw new IndexOutOfRangeException();
+            return await _entity.Where(x => x.Id == id).FirstOrDefaultAsync() ?? throw new IndexOutOfRangeException("User not found");
         }
     }
 }
