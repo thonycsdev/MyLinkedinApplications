@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.Entities;
 using Repository.Interfaces;
 using Service.DTOs.Requests;
 using Service.DTOs.Responses;
+using Service.Enums;
 using Service.Extensions;
 using Service.Interfaces;
 
@@ -17,10 +19,20 @@ namespace Service
         {
             _jobApplicationRepository = jobApplicationRepository;
         }
-        public Task<JobApplicationResponse> CreateAsync(JobApplicationRequest entity)
+        public async Task<JobApplicationResponse> CreateAsync(JobApplicationRequest entity)
         {
-            entity.ValidadeJobRequest();
-            throw new NotImplementedException();
+            var validatedEntity = entity.ValidadeJobRequest();
+            await _jobApplicationRepository.Create(new JobApplication());
+            var response = new JobApplicationResponse
+            {
+                CompanyName = validatedEntity.CompanyName,
+                Role = validatedEntity.Role,
+                Status = (Status)validatedEntity.Status!,
+                User = new User(),
+                Type = (Types)validatedEntity.Type!,
+            };
+            return response;
+
         }
 
         public Task DeleteAsync(int id)

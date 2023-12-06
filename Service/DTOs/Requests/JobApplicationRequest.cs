@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Service.Enums;
 
 namespace Service.DTOs.Requests
 {
@@ -9,8 +6,8 @@ namespace Service.DTOs.Requests
     {
         public string CompanyName { get; set; }
         public string Role { get; set; }
-        public string Status { get; set; }
-        public string? Type { get; set; }
+        public int? Status { get; set; }
+        public int? Type { get; set; }
         public int UserId { get; set; }
     }
 }
