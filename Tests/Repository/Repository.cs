@@ -19,6 +19,7 @@ namespace Tests.Repository
         public Repository()
         {
             _fixture = new Fixture();
+            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
             _faker = new Faker();
 
             var dbOptions = new DbContextOptionsBuilder()
@@ -28,6 +29,17 @@ namespace Tests.Repository
         }
         [Fact]
         public async Task GivenAUser_WhenTheCreateFunctionIsCalled_AddThisUserToTheList()
+        {
+            var user = _fixture.Build<User>().Without(x => x.CreatedAt).Without(x => x.UpdatedAt).Create();
+            var repository = new BaseRepository<User>(_context);
+
+            await repository.Create(user);
+
+            var users = _context.Users.ToList();
+            Assert.Single(users);
+        }
+
+        public async Task GivenAUser_WhenTheCreateFunctionIsCalled_AddThisUserToTheListWithHisCreationDateAndUpdatedDate()
         {
             var user = _fixture.Create<User>();
             var repository = new BaseRepository<User>(_context);
@@ -63,7 +75,7 @@ namespace Tests.Repository
             var repository = new BaseRepository<User>(_context);
 
             var ex = await Assert.ThrowsAsync<IndexOutOfRangeException>(() => repository.GetById(_faker.Random.Int(1, 100)));
-        
+
             Assert.Equal("User not found", ex.Message);
         }
 

@@ -24,6 +24,7 @@ namespace Tests.Service
         {
             _mockRepository = new Mock<IJobApplicationRepository>();
             _fixture = new Fixture();
+            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
             _mapper = new MapperConfiguration(x => x.AddProfile<AutoMapperConfig>()).CreateMapper();
             _service = new JobApplicationService(_mockRepository.Object, _mapper);
         }
