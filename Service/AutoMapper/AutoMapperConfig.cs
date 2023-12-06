@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Entities;
 using Service.DTOs;
+using Service.DTOs.Requests;
 using Service.DTOs.Responses;
 
 namespace Service.AutoMapper
@@ -15,6 +16,8 @@ namespace Service.AutoMapper
         {
             CreateMap<UserRequest, User>();
             CreateMap<User, UserResponse>();
+            CreateMap<JobApplicationRequest, JobApplication>();
+            CreateMap<JobApplication, JobApplicationResponse>();
         }
     }
 }

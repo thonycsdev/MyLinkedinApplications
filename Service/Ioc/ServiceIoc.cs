@@ -12,6 +12,7 @@ namespace Service.Ioc
         public static void AddServiceIoc(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IJobApplicationService, JobApplicationService>();
         }
     }
 }

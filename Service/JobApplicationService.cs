@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Domain.Entities;
 using Repository.Interfaces;
 using Service.DTOs.Requests;
@@ -15,9 +16,11 @@ namespace Service
     public class JobApplicationService : IJobApplicationService
     {
         private readonly IJobApplicationRepository _jobApplicationRepository;
-        public JobApplicationService(IJobApplicationRepository jobApplicationRepository)
+        private readonly IMapper _mapper;
+        public JobApplicationService(IJobApplicationRepository jobApplicationRepository, IMapper mapper)
         {
             _jobApplicationRepository = jobApplicationRepository;
+            _mapper = mapper;
         }
         public async Task<JobApplicationResponse> CreateAsync(JobApplicationRequest entity)
         {
@@ -35,24 +38,34 @@ namespace Service
 
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            await _jobApplicationRepository.Delete(id);
         }
 
-        public Task<IEnumerable<JobApplicationResponse>> GetAllAsync()
+        public async Task<IEnumerable<JobApplicationResponse>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var results = await _jobApplicationRepository.GetValues();
+            return _mapper.Map<IEnumerable<JobApplicationResponse>>(results);
         }
 
-        public Task<JobApplicationResponse> GetByIdAsync(int id)
+        public async Task<JobApplicationResponse> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var result = await _jobApplicationRepository.GetById(id);
+            return _mapper.Map<JobApplicationResponse>(result);
         }
 
-        public Task<JobApplicationResponse> UpdateAsync(JobApplicationRequest entity, int id)
+        public async Task<JobApplicationResponse> UpdateAsync(JobApplicationRequest entity, int id)
         {
-            throw new NotImplementedException();
+            var oldJobApplication = await _jobApplicationRepository.GetById(id);
+            var entityWithNewInformation = entity.ValidadeJobRequest();
+            oldJobApplication.CompanyName = entityWithNewInformation.CompanyName;
+            oldJobApplication.Role = entityWithNewInformation.Role;
+            oldJobApplication.Status = (Status)entityWithNewInformation.Status!;
+            oldJobApplication.Type = (Types)entityWithNewInformation.Type!;
+            await _jobApplicationRepository.Update(oldJobApplication);
+            return _mapper.Map<JobApplicationResponse>(oldJobApplication);
+
         }
     }
 }

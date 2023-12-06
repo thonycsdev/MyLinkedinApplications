@@ -1,10 +1,12 @@
 using System;
 using System.Threading.Tasks;
 using AutoFixture;
+using AutoMapper;
 using Domain.Entities;
 using Moq;
 using Repository.Interfaces;
 using Service;
+using Service.AutoMapper;
 using Service.DTOs.Requests;
 using Service.Enums;
 using Xunit;
@@ -16,12 +18,14 @@ namespace Tests.Service
         private readonly Mock<IJobApplicationRepository> _mockRepository;
         private readonly Fixture _fixture;
         private readonly JobApplicationService _service;
+        private readonly IMapper _mapper;
 
         public JobApplicationServiceTests()
         {
             _mockRepository = new Mock<IJobApplicationRepository>();
             _fixture = new Fixture();
-            _service = new JobApplicationService(_mockRepository.Object);
+            _mapper = new MapperConfiguration(x => x.AddProfile<AutoMapperConfig>()).CreateMapper();
+            _service = new JobApplicationService(_mockRepository.Object, _mapper);
         }
 
         [Fact]
@@ -101,6 +105,39 @@ namespace Tests.Service
 
             var ex = await Assert.ThrowsAsync<IndexOutOfRangeException>(() => _service.CreateAsync(jobApplication));
             Assert.Equal("The type must be between 0 and 2", ex.Message);
+
+        }
+
+        [Fact]
+        public async Task GivenAUpdatedDataInAJobApplication_WhenTheAJobApplicationWithTheSameIdExists_ShouldUpdateTheOldInformation()
+        {
+            var oldJobApplication = _fixture.Build<JobApplication>()
+            .With(x => x.Status, Status.Interview)
+            .With(x => x.Type, Types.Hybrid)
+            .Create();
+
+            var newJobApplication = oldJobApplication;
+            newJobApplication.CompanyName = "New Company Name";
+            newJobApplication.Role = "New Role";
+            newJobApplication.Status = Status.Accepted;
+
+            _mockRepository.Setup(x => x.GetById(It.IsAny<int>())).ReturnsAsync(oldJobApplication);
+
+            var newJobApplicationRequest = new JobApplicationRequest
+            {
+                CompanyName = newJobApplication.CompanyName,
+                Role = newJobApplication.Role,
+                Status = (int)newJobApplication.Status,
+                Type = (int)newJobApplication.Type!,
+                UserId = newJobApplication.UserId
+            };
+
+            var result = await _service.UpdateAsync(newJobApplicationRequest, 1);
+
+
+            Assert.Equal(newJobApplication.CompanyName, result.CompanyName);
+            Assert.Equal(newJobApplication.Role, result.Role);
+            Assert.Equal(newJobApplication.Status, result.Status);
 
         }
     }
