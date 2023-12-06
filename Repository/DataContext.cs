@@ -15,9 +15,9 @@ namespace Repository
         //     optionsBuilder.UseSqlite("Data Source=linkedinJobs.db");
         // }
 
-        // override protected void OnModelCreating(ModelBuilder modelBuilder)
-        // {
-        //     modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
-        // }
+        override protected void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
+        }
     }
 }

@@ -9,5 +9,6 @@ namespace Domain.Entities
     {
         public string Name { get; set; }
         public string Email { get; set; }
+        public List<JobApplication> JobApplications { get; set; }
     }
 }
