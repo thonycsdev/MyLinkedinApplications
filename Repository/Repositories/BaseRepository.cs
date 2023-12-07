@@ -17,6 +17,8 @@ namespace Repository
 
         public async Task Create(T entity)
         {
+            entity.CreatedAt = DateTime.Now;
+            entity.UpdatedAt = DateTime.Now;
             _entity.Add(entity);
             await _dbContext.SaveChangesAsync();
         }
@@ -42,6 +44,7 @@ namespace Repository
 
         public async Task Update(T entity)
         {
+            entity.UpdatedAt = DateTime.Now;
             _dbContext.Update(entity);
             await _dbContext.SaveChangesAsync();
         }

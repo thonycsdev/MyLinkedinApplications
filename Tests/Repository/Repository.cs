@@ -39,15 +39,22 @@ namespace Tests.Repository
             Assert.Single(users);
         }
 
+
+        [Fact]
         public async Task GivenAUser_WhenTheCreateFunctionIsCalled_AddThisUserToTheListWithHisCreationDateAndUpdatedDate()
         {
-            var user = _fixture.Create<User>();
+            var user = _fixture.Build<User>()
+            .Without(x => x.CreatedAt)
+            .Without(x => x.UpdatedAt)
+            .Create();
             var repository = new BaseRepository<User>(_context);
 
             await repository.Create(user);
 
             var users = _context.Users.ToList();
-            Assert.Single(users);
+            var userAdded = users.First();
+            Assert.True(userAdded.CreatedAt > DateTime.MinValue);
+            Assert.True(userAdded.UpdatedAt > DateTime.MinValue);
         }
 
         [Fact]
@@ -107,7 +114,6 @@ namespace Tests.Repository
 
             userSaved.Name = infoToUpdate.Name;
             userSaved.Email = infoToUpdate.Email;
-            userSaved.UpdatedAt = infoToUpdate.UpdatedAt;
 
             await repository.Update(userSaved);
 
@@ -115,7 +121,7 @@ namespace Tests.Repository
 
             Assert.Equal(userUpdated.Name, infoToUpdate.Name);
             Assert.Equal(userUpdated.Email, infoToUpdate.Email);
-            Assert.Equal(userUpdated.UpdatedAt, infoToUpdate.UpdatedAt);
+            Assert.True(userUpdated.UpdatedAt > DateTime.MinValue);
         }
     }
 }
