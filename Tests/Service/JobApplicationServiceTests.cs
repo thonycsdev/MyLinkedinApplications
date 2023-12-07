@@ -16,6 +16,7 @@ namespace Tests.Service
     public class JobApplicationServiceTests
     {
         private readonly Mock<IJobApplicationRepository> _mockRepository;
+        private readonly Mock<IUserRepository> _userRepository;
         private readonly Fixture _fixture;
         private readonly JobApplicationService _service;
         private readonly IMapper _mapper;
@@ -23,10 +24,11 @@ namespace Tests.Service
         public JobApplicationServiceTests()
         {
             _mockRepository = new Mock<IJobApplicationRepository>();
+            _userRepository = new Mock<IUserRepository>();
             _fixture = new Fixture();
             _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
             _mapper = new MapperConfiguration(x => x.AddProfile<AutoMapperConfig>()).CreateMapper();
-            _service = new JobApplicationService(_mockRepository.Object, _mapper);
+            _service = new JobApplicationService(_mockRepository.Object, _mapper, _userRepository.Object);
         }
 
         [Fact]

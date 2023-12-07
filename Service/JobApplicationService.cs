@@ -16,22 +16,25 @@ namespace Service
     public class JobApplicationService : IJobApplicationService
     {
         private readonly IJobApplicationRepository _jobApplicationRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public JobApplicationService(IJobApplicationRepository jobApplicationRepository, IMapper mapper)
+        public JobApplicationService(IJobApplicationRepository jobApplicationRepository, IMapper mapper, IUserRepository userRepository)
         {
             _jobApplicationRepository = jobApplicationRepository;
+            _userRepository = userRepository;
             _mapper = mapper;
         }
         public async Task<JobApplicationResponse> CreateAsync(JobApplicationRequest entity)
         {
             var validatedEntity = entity.ValidadeJobRequest();
-            await _jobApplicationRepository.Create(new JobApplication());
+            var user = await _userRepository.GetById(validatedEntity.UserId);
+            await _jobApplicationRepository.Create(_mapper.Map<JobApplication>(entity));
             var response = new JobApplicationResponse
             {
                 CompanyName = validatedEntity.CompanyName,
                 Role = validatedEntity.Role,
                 Status = (Status)validatedEntity.Status!,
-                User = new User(),
+                User = _mapper.Map<UserResponse>(user),
                 Type = (Types)validatedEntity.Type!,
             };
             return response;

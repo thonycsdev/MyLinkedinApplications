@@ -8,7 +8,7 @@ namespace Domain.Entities
         public string Role { get; set; }
         public Status Status { get; set; }
         public Types? Type { get; set; }
-        public User User { get; set; }
+        public virtual User User { get; set; }
         public int UserId { get; set; }
     }
 }

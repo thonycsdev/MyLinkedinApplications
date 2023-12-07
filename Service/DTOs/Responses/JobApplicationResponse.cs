@@ -13,6 +13,6 @@ namespace Service.DTOs.Responses
         public string Role { get; set; }
         public Status Status { get; set; }
         public Types? Type { get; set; }
-        public User User { get; set; }
+        public UserResponse User { get; set; }
     }
 }

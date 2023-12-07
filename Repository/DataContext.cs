@@ -10,10 +10,10 @@ namespace Repository
 
         public DbSet<User> Users { get; set; }
 
-        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        // {
-        //     optionsBuilder.UseSqlite("Data Source=linkedinJobs.db");
-        // }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
+        }
 
         override protected void OnModelCreating(ModelBuilder modelBuilder)
         {
