@@ -143,5 +143,25 @@ namespace Tests.Service
             Assert.Equal(newJobApplication.Status, result.Status);
 
         }
+
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(2, 2)]
+        [InlineData(3, 3)]
+        [InlineData(4, 4)]
+        public async Task GivenAJobApplicationIdAndANewJobApplicationStatus_WhenTheAJobApplicationWithTheSameIdExists_ShouldUpdateTheOldInformation(int jobApplicationId, int jobApplicaionStatusEnumNumber)
+        {
+            var oldJobApplication = _fixture.Build<JobApplication>()
+            .With(x => x.Status, Status.Applied)
+            .With(x => x.Type, Types.Hybrid)
+            .With(x => x.Id, jobApplicationId)
+            .Create();
+
+            _mockRepository.Setup(x => x.GetById(jobApplicationId)).ReturnsAsync(oldJobApplication);
+
+            var result = await _service.UpdateJobApplicationStatus(jobApplicationId, jobApplicaionStatusEnumNumber);
+            Assert.Equal((Status)jobApplicaionStatusEnumNumber, result.Status);
+
+        }
     }
 }

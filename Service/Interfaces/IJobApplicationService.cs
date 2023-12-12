@@ -9,6 +9,6 @@ namespace Service.Interfaces
 {
     public interface IJobApplicationService : IBaseService<JobApplicationResponse, JobApplicationRequest>
     {
-
+        Task<JobApplicationResponse> UpdateJobApplicationStatus(int jobApplicationId, int jobApplicaionStatusEnumNumber);
     }
 }
