@@ -54,20 +54,44 @@ namespace Service
 
         public async Task<JobApplicationResponse> GetByIdAsync(int id)
         {
-            var result = await _jobApplicationRepository.GetById(id);
+            var result = await FindJobApplicationById(id);
             return _mapper.Map<JobApplicationResponse>(result);
         }
 
         public async Task<JobApplicationResponse> UpdateAsync(JobApplicationRequest entity, int id)
         {
-            var oldJobApplication = await _jobApplicationRepository.GetById(id);
+            var oldJobApplication = await FindJobApplicationById(id);
             var entityWithNewInformation = entity.ValidadeJobRequest();
+
             oldJobApplication.CompanyName = entityWithNewInformation.CompanyName;
             oldJobApplication.Role = entityWithNewInformation.Role;
             oldJobApplication.Status = (Status)entityWithNewInformation.Status!;
             oldJobApplication.Type = (Types)entityWithNewInformation.Type!;
-            await _jobApplicationRepository.Update(oldJobApplication);
+
+            await UpdateAndSaveJobApplication(oldJobApplication);
             return _mapper.Map<JobApplicationResponse>(oldJobApplication);
+
+        }
+
+        public async Task<JobApplicationResponse> UpdateJobApplicationStatus(int jobApplicationId, int jobApplicaionStatusEnumNumber)
+        {
+            var jobApplication = await FindJobApplicationById(jobApplicationId);
+            jobApplication.Status = (Status)jobApplicaionStatusEnumNumber;
+            await UpdateAndSaveJobApplication(jobApplication);
+            return _mapper.Map<JobApplicationResponse>(jobApplication);
+
+        }
+
+        private async Task UpdateAndSaveJobApplication(JobApplication jobApplication)
+        {
+            await _jobApplicationRepository.Update(jobApplication);
+        }
+
+        private async Task<JobApplication> FindJobApplicationById(int jobApplicationId)
+        {
+            var jobApplication = await _jobApplicationRepository.GetById(jobApplicationId);
+            jobApplication.ThrowIfNull("Job Application not found");
+            return await _jobApplicationRepository.GetById(jobApplicationId);
 
         }
     }

@@ -31,5 +31,23 @@ namespace Api.Controllers
             await _jobApplicationService.CreateAsync(viewModel);
             return Ok();
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var result = await _jobApplicationService.GetByIdAsync(id);
+            return Ok(result);
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _jobApplicationService.DeleteAsync(id);
+            return Ok();
+        }
+        [HttpPut("update_status/{id}")]
+        public async Task<IActionResult> Update(int id, int jobApplicaionStatusEnumNumber)
+        {
+            await _jobApplicationService.UpdateJobApplicationStatus(id, jobApplicaionStatusEnumNumber);
+            return Ok();
+        }
     }
 }

@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>(options => options.UseSqlite("Data Source=linkedinJobs.db"));
+builder.Services.ConfigureDataContext(builder.Configuration);
 builder.Services.AddRepositoryIoc();
 builder.Services.AddServiceIoc();
 builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
