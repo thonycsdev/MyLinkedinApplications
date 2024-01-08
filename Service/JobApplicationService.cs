@@ -29,16 +29,24 @@ namespace Service
             var validatedEntity = entity.ValidadeJobRequest();
             var user = await _userRepository.GetById(validatedEntity.UserId);
             await _jobApplicationRepository.Create(_mapper.Map<JobApplication>(entity));
+            JobApplicationResponse response = CreateResponse(validatedEntity, user);
+            return response;
+
+        }
+
+        private JobApplicationResponse CreateResponse(JobApplicationRequest validatedEntity, User? user)
+        {
+            var statusString = ((Status)validatedEntity.Status!).ToReadableString();
+            var typeString = ((Types)validatedEntity.Type!).ToReadableString();
             var response = new JobApplicationResponse
             {
                 CompanyName = validatedEntity.CompanyName,
                 Role = validatedEntity.Role,
-                Status = (Status)validatedEntity.Status!,
                 User = _mapper.Map<UserResponse>(user),
-                Type = (Types)validatedEntity.Type!,
+                Status = statusString,
+                Type = typeString
             };
             return response;
-
         }
 
         public async Task DeleteAsync(int id)
